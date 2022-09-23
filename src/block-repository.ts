@@ -1,5 +1,8 @@
-import { BlockInfo, BlockRepository, EthereumProvider } from "./types"
+import { BlockInfo, BlockRepository, EthereumProvider } from './types'
 
+/**
+ * @public
+ */
 export const createBlockRepository = (eth: EthereumProvider): BlockRepository => {
   const currentBlock = async (): Promise<BlockInfo> => {
     const block = await eth.getBlockNumber()
@@ -16,7 +19,7 @@ export const createBlockRepository = (eth: EthereumProvider): BlockRepository =>
     if (timestamp) {
       return {
         block: block,
-        timestamp: Number(timestamp),
+        timestamp: Number(timestamp)
       }
     }
 
@@ -25,6 +28,6 @@ export const createBlockRepository = (eth: EthereumProvider): BlockRepository =>
 
   return {
     currentBlock,
-    findBlock,
+    findBlock
   }
 }

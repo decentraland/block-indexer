@@ -1,13 +1,16 @@
-import { BlockInfo, BlockRepository, BlockSearch } from "./types"
+import { BlockInfo, BlockRepository, BlockSearch } from './types'
 
+/**
+ * @public
+ */
 export const createBlockSearch = (blockRepository: BlockRepository): BlockSearch => {
   const findBlockForTimestamp = async (ts: number): Promise<BlockInfo | undefined> => {
     let start = 1
     let end = (await blockRepository.currentBlock()).block
 
     while (start <= end) {
-      let middle = Math.floor((start + end) / 2)
-      let blockInMiddle = await blockRepository.findBlock(middle)
+      const middle = Math.floor((start + end) / 2)
+      const blockInMiddle = await blockRepository.findBlock(middle)
 
       if (blockInMiddle.timestamp === ts) {
         return blockInMiddle
@@ -29,6 +32,6 @@ export const createBlockSearch = (blockRepository: BlockRepository): BlockSearch
   }
 
   return {
-    findBlockForTimestamp,
+    findBlockForTimestamp
   }
 }

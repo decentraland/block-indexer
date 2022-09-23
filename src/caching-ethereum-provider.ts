@@ -1,17 +1,20 @@
-import { EthereumProvider } from "./types"
-import LRU from "lru-cache"
+import { EthereumProvider } from './types'
+import LRU from 'lru-cache'
 
+/**
+ * @public
+ */
 export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumProvider => {
   const cache = new LRU<number, string | number>({
     max: 10000,
-    fetchMethod: async (block, staleValue, { options, signal }): Promise<string | number> => {
-      let found = await eth.getBlock(block)
+    fetchMethod: async (block): Promise<string | number> => {
+      const found = await eth.getBlock(block)
       if (found) {
         return found.timestamp
       }
 
       throw Error(`Block ${block} could not be retrieved.`)
-    },
+    }
   })
 
   const getBlockNumber = async (): Promise<number> => await eth.getBlockNumber()
@@ -20,7 +23,7 @@ export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumPr
     const found = await cache.fetch(block)
     if (found) {
       return {
-        timestamp: found,
+        timestamp: found
       }
     }
 
@@ -29,6 +32,6 @@ export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumPr
 
   return {
     getBlockNumber,
-    getBlock,
+    getBlock
   }
 }
