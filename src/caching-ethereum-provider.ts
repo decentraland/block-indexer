@@ -8,6 +8,7 @@ export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumPr
   const cache = new LRU<number, string | number>({
     max: 10000,
     fetchMethod: async (block): Promise<string | number> => {
+      console.log(`BLOCK_SEARCH: getBlock: ${block}`)
       const found = await eth.getBlock(block)
       if (found) {
         return found.timestamp
@@ -17,13 +18,16 @@ export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumPr
     }
   })
 
-  const getBlockNumber = async (): Promise<number> => await eth.getBlockNumber()
+  const getBlockNumber = async (): Promise<number> => {
+    console.log(`BLOCK_SEARCH: getBlockNumber`)
+    return await eth.getBlockNumber()
+  }
 
   const getBlock = async (block: number): Promise<{ timestamp: string | number }> => {
     const found = await cache.fetch(block)
     if (found) {
       return {
-        timestamp: found
+        timestamp: found,
       }
     }
 
