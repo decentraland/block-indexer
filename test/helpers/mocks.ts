@@ -1,4 +1,4 @@
-import { BlockInfo, BlockRepository } from "../../src/types"
+import { BlockInfo, BlockRepository } from "../../src"
 
 export const createMockBlockRepository = (currentBlock: number, blocks: Record<number, number>) => {
   const blockRepository: BlockRepository = {

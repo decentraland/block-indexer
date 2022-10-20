@@ -1,11 +1,14 @@
-import { BlockSearch } from "../src"
+import { BlockSearch, createAvlBlockSearch } from "../src"
 import { createMockBlockRepository } from "./helpers/mocks"
-import { createBlockSearch } from "../src"
 import { range } from "./utils"
 import { realBlocks, testingBlocks } from "./fixtures"
 
 describe("block-indexer", () => {
-  const blockSearch = createBlockSearch(createMockBlockRepository(10, testingBlocks))
+  let blockSearch: BlockSearch
+
+  beforeEach(() => {
+    blockSearch = createAvlBlockSearch(createMockBlockRepository(10, testingBlocks))
+  })
 
   it.each(range(0, 9))("works for timestamps before start %p", async (ts) => {
     await expect(blockSearch.findBlockForTimestamp(ts)).resolves.toBeUndefined()
@@ -25,6 +28,15 @@ describe("block-indexer", () => {
     })
   })
 
+  it("works for successive searches", async () => {
+    for (let ts = 50; ts < 60; ts++) {
+      await expect(blockSearch.findBlockForTimestamp(ts)).resolves.toEqual({
+        block: Math.floor(ts / 10),
+        timestamp: Math.floor(ts / 10) * 10,
+      })
+    }
+  })
+
   it.each([
     [1632225210, 13268972, 1632225209],
     [1612524220, 11795934, 1612524214],
@@ -37,7 +49,7 @@ describe("block-indexer", () => {
     [1623204021, 12597528, 1623204005],
     [1623204030, 12597529, 1623204022],
   ])("find block for timestamp %p", async (entityTs: number, block: number, blockTs: number) => {
-    const realBlockSearch: BlockSearch = createBlockSearch(createMockBlockRepository(15597127, realBlocks))
+    const realBlockSearch: BlockSearch = createAvlBlockSearch(createMockBlockRepository(15597127, realBlocks))
 
     const currentBlock = await realBlockSearch.findBlockForTimestamp(entityTs)
     expect(currentBlock.block).toBe(block)

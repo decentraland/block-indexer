@@ -1,5 +1,5 @@
-import { createBlockRepository } from "../src/block-repository"
-import { EthereumProvider } from "../src/types"
+import { createBlockRepository } from "../src"
+import { EthereumProvider } from "../src"
 
 const createEthereumMock = (currentBlock: number): EthereumProvider => ({
   getBlock(block: number): Promise<{ timestamp: string | number }> {
