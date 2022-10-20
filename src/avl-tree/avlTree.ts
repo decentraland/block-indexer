@@ -4,7 +4,7 @@
  * Released under MIT license. See LICENSE in the project root for details.
  */
 
-import { Node } from "./node"
+import { Node } from './node'
 
 /**
  * Represents how balanced a node's left and right children are.
@@ -19,7 +19,7 @@ const enum BalanceState {
   /** Left child's height is 1 greater than right child's height */
   SLIGHTLY_UNBALANCED_LEFT,
   /** Left child's height is 2+ greater than right child's height */
-  UNBALANCED_LEFT,
+  UNBALANCED_LEFT
 }
 
 export type CompareFunction<K> = (a: K, b: K) => number

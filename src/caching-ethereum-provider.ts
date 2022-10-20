@@ -27,7 +27,7 @@ export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumPr
     const found = await cache.fetch(block)
     if (found) {
       return {
-        timestamp: found,
+        timestamp: found
       }
     }
 

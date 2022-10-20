@@ -1,6 +1,6 @@
-import { BlockInfo, BlockRepository, BlockSearch } from "./types"
+import { BlockInfo, BlockRepository, BlockSearch } from './types'
 
-import { AvlTree } from "./avl-tree/avlTree"
+import { AvlTree } from './avl-tree/avlTree'
 
 /**
  * @public
@@ -19,8 +19,8 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
 
   const findBlockForTimestamp = async (ts: number): Promise<BlockInfo | undefined> => {
     const range = tree.findEnclosingRange(ts)
-    let start = range.min ? tree.get(range.min)?.block! : 1
-    let end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
+    const start = range.min ? tree.get(range.min)?.block! : 1
+    const end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
     return findBlockForTimestampInRange(ts, start, end)
   }
 
@@ -29,7 +29,7 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
     startBlock: number,
     endBlock: number
   ): Promise<BlockInfo | undefined> => {
-    console.log("rango a buscar", { startBlock, endBlock })
+    console.log('rango a buscar', { startBlock, endBlock })
     while (startBlock <= endBlock) {
       const middle = Math.floor((startBlock + endBlock) / 2)
       const blockInMiddle = await retrieveBlockAndAddToTree(middle)
@@ -44,7 +44,7 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
     }
     const [blockAtStart, blockAtEnd] = [
       await retrieveBlockAndAddToTree(startBlock),
-      await retrieveBlockAndAddToTree(endBlock),
+      await retrieveBlockAndAddToTree(endBlock)
     ]
 
     if (blockAtStart && blockAtStart.timestamp <= ts) {
@@ -57,6 +57,6 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
   }
 
   return {
-    findBlockForTimestamp,
+    findBlockForTimestamp
   }
 }
