@@ -16,9 +16,11 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
     // We first attempt to search in the tree
     const found = tree.findByValue({ block: blockNumber })
     if (found) {
+      console.log(`BLOCK_SEARCH: block found in cache: ${blockNumber}`)
       return found
     }
 
+    console.log(`BLOCK_SEARCH: block not found in cache: ${blockNumber}`)
     // Only if not found we go to the blockchain and cache it for later
     const blockInfo = await blockRepository.findBlock(blockNumber)
     if (blockInfo) {
@@ -31,6 +33,7 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
     const range = tree.findEnclosingRange(ts)
     const start = range.min ? tree.get(range.min)?.block! : 1
     const end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
+    console.log(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in range ${start}-${end}`)
     return findBlockForTimestampInRange(ts, start, end)
   }
 
@@ -39,7 +42,6 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
     startBlock: number,
     endBlock: number
   ): Promise<BlockInfo | undefined> => {
-    console.log('rango a buscar', { startBlock, endBlock })
     while (startBlock <= endBlock) {
       const middle = Math.floor((startBlock + endBlock) / 2)
       const blockInMiddle = await retrieveBlockAndAddToTree(middle)
