@@ -7,9 +7,19 @@ import { AvlTree } from './avl-tree/avl-tree'
  */
 export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSearch => {
   // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
-  const tree = new AvlTree<number, BlockInfo>()
+  const tree = new AvlTree<number, BlockInfo>(
+    (x, y) => y - x,
+    (x, y) => y.block! - x.block!
+  )
 
   const retrieveBlockAndAddToTree = async (blockNumber: number) => {
+    // We first attempt to search in the tree
+    const found = tree.findByValue({ block: blockNumber })
+    if (found) {
+      return found
+    }
+
+    // Only if not found we go to the blockchain and cache it for later
     const blockInfo = await blockRepository.findBlock(blockNumber)
     if (blockInfo) {
       tree.insert(blockInfo.timestamp, blockInfo)
