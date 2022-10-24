@@ -23,6 +23,7 @@ const enum BalanceState {
 }
 
 export type CompareFunction<K> = (a: K, b: K) => number
+export type PartialCompareFunction<V> = (a: Partial<V>, b: Partial<V>) => number
 
 export type Range<T> = { min: T | undefined; max: T | undefined }
 
@@ -45,7 +46,7 @@ export interface AvlTreeApi<K, V> {
    * @param key The key being inserted.
    * @param value The value being inserted.
    */
-  insert(key: K, value?: V): void
+  insert(key: K, value: V): void
 
   /**
    * Deletes a node with a specific key from the tree.
@@ -61,6 +62,8 @@ export interface AvlTreeApi<K, V> {
    */
   get(key: K): V | undefined | null
 
+  findByValue(value: Partial<V>): V | undefined | null
+
   findEnclosingRange(key: K): Range<K>
 
   /**
@@ -69,29 +72,22 @@ export interface AvlTreeApi<K, V> {
    * @return Whether a node with the key exists.
    */
   contains(key: K): boolean
-
-  /**
-   * @return The minimum key in the tree or null if there are no nodes.
-   */
-  findMinimum(): K | null
-
-  /**
-   * Gets the maximum key in the tree or null if there are no nodes.
-   */
-  findMaximum(): K | null
 }
 
 export class AvlTree<K, V> implements AvlTreeApi<K, V> {
   protected _root: Node<K, V> | null = null
   private _size: number = 0
   private readonly _compare: CompareFunction<K>
+  private readonly _compareByValue: PartialCompareFunction<V>
 
   /**
    * Creates a new AVL Tree.
-   * @param compare a compartion function
+   * @param compare a comparison function to compare keys
+   * @param compareByValue a comparison function to compare values
    */
-  constructor(compare?: CompareFunction<K>) {
+  constructor(compare?: CompareFunction<K>, compareByValue?: PartialCompareFunction<V>) {
     this._compare = compare ? compare : this._defaultCompare
+    this._compareByValue = compareByValue ? compareByValue : this._defaultCompareByValue
   }
 
   /**
@@ -111,11 +107,27 @@ export class AvlTree<K, V> implements AvlTreeApi<K, V> {
   }
 
   /**
+   * Compares two keys with each other.
+   * @param a The first key to compare.
+   * @param b The second key to compare.
+   * @return -1, 0 or 1 if a < b, a == b or a > b respectively.
+   */
+  private _defaultCompareByValue(a: Partial<V>, b: Partial<V>): number {
+    if (a > b) {
+      return 1
+    }
+    if (a < b) {
+      return -1
+    }
+    return 0
+  }
+
+  /**
    * Inserts a new node with a specific key into the tree.
    * @param key The key being inserted.
    * @param value The value being inserted.
    */
-  public insert(key: K, value?: V): void {
+  public insert(key: K, value: V): void {
     this._root = this._insert(key, value, this._root)
     this._size++
   }
@@ -127,7 +139,7 @@ export class AvlTree<K, V> implements AvlTreeApi<K, V> {
    * @param root The root of the tree to insert in.
    * @return The new tree root.
    */
-  private _insert(key: K, value: V | undefined, root: Node<K, V> | null): Node<K, V> {
+  private _insert(key: K, value: V, root: Node<K, V> | null): Node<K, V> {
     // Perform regular BST insertion
     if (root === null) {
       return new Node(key, value)
@@ -300,6 +312,38 @@ export class AvlTree<K, V> implements AvlTreeApi<K, V> {
     return this._get(key, root.right)
   }
 
+  findByValue(value: Partial<V>): V | null {
+    if (this._root === null) {
+      return null
+    }
+
+    const result = this._findByValue(value, this._root)
+    if (!result) {
+      return null
+    }
+
+    return result.value
+  }
+
+  private _findByValue(value: Partial<V>, root: Node<K, V>): Node<K, V> | null {
+    const result = this._compareByValue(value, root.value)
+    if (result === 0) {
+      return root
+    }
+
+    if (result < 0) {
+      if (!root.left) {
+        return null
+      }
+      return this._findByValue(value, root.left)
+    }
+
+    if (!root.right) {
+      return null
+    }
+    return this._findByValue(value, root.right)
+  }
+
   public findEnclosingRange(key: K): Range<K> {
     if (this._root === null) {
       return { min: undefined, max: undefined }
@@ -333,26 +377,6 @@ export class AvlTree<K, V> implements AvlTreeApi<K, V> {
     }
 
     return !!this._get(key, this._root)
-  }
-
-  /**
-   * @return The minimum key in the tree or null if there are no nodes.
-   */
-  public findMinimum(): K | null {
-    if (this._root === null) {
-      return null
-    }
-    return this._minValueNode(this._root).key
-  }
-
-  /**
-   * Gets the maximum key in the tree or null if there are no nodes.
-   */
-  public findMaximum(): K | null {
-    if (this._root === null) {
-      return null
-    }
-    return this._maxValueNode(this._root).key
   }
 
   /**

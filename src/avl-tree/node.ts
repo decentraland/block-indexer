@@ -14,7 +14,7 @@ export class Node<K, V> {
    * @param key The key of the new node.
    * @param value The value of the new node.
    */
-  constructor(public key: K, public value: V | undefined) {}
+  constructor(public key: K, public value: V) {}
 
   /**
    * Performs a right rotate on this node.
