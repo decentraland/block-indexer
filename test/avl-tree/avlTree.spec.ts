@@ -1,4 +1,4 @@
-import { AvlTree } from "../../src/avl-tree/avlTree"
+import { AvlTree } from "../../src/avl-tree/avl-tree"
 
 describe("avl-tree", () => {
   it("finds the correct range for empty tree", async () => {

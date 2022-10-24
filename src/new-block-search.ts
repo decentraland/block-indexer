@@ -1,6 +1,6 @@
 import { BlockInfo, BlockRepository, BlockSearch } from './types'
 
-import { AvlTree } from './avl-tree/avlTree'
+import { AvlTree } from './avl-tree/avl-tree'
 
 /**
  * @public
