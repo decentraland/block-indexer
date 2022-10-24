@@ -22,6 +22,9 @@ export type BlockSearch = {
 };
 
 // @public (undocumented)
+export const createAvlBlockSearch: (blockRepository: BlockRepository) => BlockSearch;
+
+// @public (undocumented)
 export const createBlockRepository: (eth: EthereumProvider) => BlockRepository;
 
 // @public (undocumented)
