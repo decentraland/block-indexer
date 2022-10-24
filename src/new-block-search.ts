@@ -8,8 +8,8 @@ import { AvlTree } from './avl-tree/avl-tree'
 export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSearch => {
   // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
   const tree = new AvlTree<number, BlockInfo>(
-    (x, y) => y - x,
-    (x, y) => y.block! - x.block!
+    (x, y) => x - y,
+    (x, y) => x.block! - y.block!
   )
 
   const retrieveBlockAndAddToTree = async (blockNumber: number) => {
