@@ -1,13 +1,12 @@
 import { BlockInfo, BlockRepository, BlockSearch } from './types'
-
-import { AvlTree } from './avl-tree/avl-tree'
+import { createAvlTree } from './avl-tree/avl-tree'
 
 /**
  * @public
  */
 export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSearch => {
   // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
-  const tree = new AvlTree<number, BlockInfo>(
+  const tree = createAvlTree<number, BlockInfo>(
     (x, y) => x - y,
     (x, y) => x.block! - y.block!
   )

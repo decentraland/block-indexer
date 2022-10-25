@@ -1,4 +1,4 @@
-import { Node } from "./node"
+import { Node } from './node'
 
 export type CompareFunction<K> = (a: K, b: K) => number
 

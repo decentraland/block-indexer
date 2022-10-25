@@ -1,5 +1,5 @@
-import { Node } from "./node"
-import { AvlTree, CompareFunction, PartialCompareFunction, Range } from "./types"
+import { Node } from './node'
+import { AvlTree, CompareFunction, PartialCompareFunction, Range } from './types'
 
 /**
  * Represents how balanced a node's left and right children are.
@@ -14,7 +14,7 @@ const enum BalanceState {
   /** Left child's height is 1 greater than right child's height */
   SLIGHTLY_UNBALANCED_LEFT,
   /** Left child's height is 2+ greater than right child's height */
-  UNBALANCED_LEFT,
+  UNBALANCED_LEFT
 }
 
 export const createAvlTree = <K, V>(
@@ -391,6 +391,6 @@ export const createAvlTree = <K, V>(
     get,
     findByValue,
     findEnclosingRange,
-    contains,
+    contains
   }
 }
