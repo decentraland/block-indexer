@@ -1,9 +1,3 @@
-/**
- * @license
- * Copyright Daniel Imms <http://www.growingwiththeweb.com>
- * Released under MIT license. See LICENSE in the project root for details.
- */
-
 export class Node<K, V> {
   public left: Node<K, V> | null = null
   public right: Node<K, V> | null = null
@@ -18,7 +12,7 @@ export class Node<K, V> {
 
   /**
    * Performs a right rotate on this node.
-   * @return The root of the sub-tree; the node where this node used to be.
+   * @return The root of the subtree; the node where this node used to be.
    * @throws If Node.left is null.
    */
   public rotateRight(): Node<K, V> {
@@ -37,7 +31,7 @@ export class Node<K, V> {
 
   /**
    * Performs a left rotate on this node.
-   * @return The root of the sub-tree; the node where this node used to be.
+   * @return The root of the subtree; the node where this node used to be.
    * @throws If Node.right is null.
    */
   public rotateLeft(): Node<K, V> {
