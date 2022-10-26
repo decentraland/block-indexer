@@ -28,9 +28,6 @@ export const createAvlBlockSearch: (blockRepository: BlockRepository) => BlockSe
 export const createBlockRepository: (eth: EthereumProvider) => BlockRepository;
 
 // @public (undocumented)
-export const createBlockSearch: (blockRepository: BlockRepository) => BlockSearch;
-
-// @public (undocumented)
 export const createCachingEthereumProvider: (eth: EthereumProvider) => EthereumProvider;
 
 // @public (undocumented)
