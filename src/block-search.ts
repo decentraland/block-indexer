@@ -27,11 +27,17 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
   }
 
   const findBlockForTimestamp = async (ts: number): Promise<BlockInfo | undefined> => {
-    const range = tree.findEnclosingRange(ts)
-    const start = range.min ? tree.get(range.min)?.block! : 1
-    const end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
-    console.log(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in block range ${start}-${end}`)
-    return findBlockForTimestampInRange(ts, start, end)
+    const tsStart = new Date().getTime()
+    try {
+      const range = tree.findEnclosingRange(ts)
+      const start = range.min ? tree.get(range.min)?.block! : 1
+      const end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
+      console.log(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in block range ${start}-${end}`)
+      return await findBlockForTimestampInRange(ts, start, end)
+    } finally {
+      const tsEnd = new Date().getTime()
+      console.log(`BLOCK_SEARCH: findBlockForTimestamp(${ts}) took ${tsEnd - tsStart} ms.`)
+    }
   }
 
   const findBlockForTimestampInRange = async (
