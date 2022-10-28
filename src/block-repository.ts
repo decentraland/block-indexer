@@ -14,6 +14,9 @@ export const createBlockRepository = (eth: EthereumProvider): BlockRepository =>
       }
 
       return found
+    } catch (e) {
+      console.log(e)
+      throw e
     } finally {
       const tsEnd = new Date().getTime()
       console.log(`BLOCK_SEARCH: currentBlock() took ${tsEnd - tsStart} ms.`)
@@ -30,6 +33,9 @@ export const createBlockRepository = (eth: EthereumProvider): BlockRepository =>
           timestamp: Number(timestamp)
         }
       }
+    } catch (e) {
+      console.log(e)
+      throw e
     } finally {
       const tsEnd = new Date().getTime()
       console.log(`BLOCK_SEARCH: findBlock(${block}) took ${tsEnd - tsStart} ms.`)

@@ -34,6 +34,9 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
       const end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
       console.log(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in block range ${start}-${end}`)
       return await findBlockForTimestampInRange(ts, start, end)
+    } catch (e) {
+      console.log(e)
+      throw e
     } finally {
       const tsEnd = new Date().getTime()
       console.log(`BLOCK_SEARCH: findBlockForTimestamp(${ts}) took ${tsEnd - tsStart} ms.`)
