@@ -4,6 +4,7 @@ import { createBlockRepository } from "./block-repository"
 import { loadTree, saveTree } from "./avl-tree/tree-io"
 
 export * from "./types"
+export * from "./avl-tree/types"
 
 export { createAvlBlockSearch, createCachingEthereumProvider, createBlockRepository }
 export { loadTree, saveTree }

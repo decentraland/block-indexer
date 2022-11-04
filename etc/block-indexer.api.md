@@ -4,6 +4,19 @@
 
 ```ts
 
+// @public
+export type AvlTree<K, V> = {
+    root(): Node_2<K, V> | null;
+    size(): number;
+    isEmpty(): boolean;
+    insert(key: K, value: V): void;
+    remove(key: K): void;
+    get(key: K): V | undefined | null;
+    findByValue(value: Partial<V>): V | undefined | null;
+    findEnclosingRange(key: K): Range_2<K>;
+    contains(key: K): boolean;
+};
+
 // @public (undocumented)
 export type BlockInfo = {
     block: number;
@@ -22,6 +35,9 @@ export type BlockSearch = {
 };
 
 // @public (undocumented)
+export type CompareFunction<K> = (a: K, b: K) => number;
+
+// @public (undocumented)
 export const createAvlBlockSearch: (blockRepository: BlockRepository) => BlockSearch;
 
 // @public (undocumented)
@@ -37,6 +53,29 @@ export type EthereumProvider = {
         timestamp: string | number;
     }>;
 };
+
+// @public (undocumented)
+export function loadTree<K, V>(tree: AvlTree<K, V>, file: string, converter: (row: any[]) => {
+    key: K;
+    value: V;
+}): Promise<void>;
+
+// @public (undocumented)
+export type PartialCompareFunction<V> = (a: Partial<V>, b: Partial<V>) => number;
+
+// @public (undocumented)
+type Range_2<T> = {
+    min: T | undefined;
+    max: T | undefined;
+};
+export { Range_2 as Range }
+
+// @public (undocumented)
+export function saveTree<K, V>(tree: AvlTree<K, V>, file: string, converter: (k: K, v: V) => any[]): Promise<void>;
+
+// Warnings were encountered during analysis:
+//
+// src/avl-tree/types.ts:27:3 - (ae-forgotten-export) The symbol "Node_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
