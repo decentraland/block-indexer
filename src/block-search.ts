@@ -5,9 +5,9 @@ import { createAvlTree } from './avl-tree/avl-tree'
  * @public
  */
 export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSearch => {
-  // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
   const tree = createAvlTree<number, BlockInfo>(
     (x, y) => x - y,
+    // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
     (x, y) => x.block! - y.block!
   )
 
@@ -75,6 +75,7 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
   }
 
   return {
+    tree,
     findBlockForTimestamp
   }
 }

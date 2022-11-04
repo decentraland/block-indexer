@@ -31,6 +31,7 @@ export type BlockRepository = {
 
 // @public (undocumented)
 export type BlockSearch = {
+    tree: AvlTree<number, BlockInfo>;
     findBlockForTimestamp(ts: number): Promise<BlockInfo | undefined>;
 };
 

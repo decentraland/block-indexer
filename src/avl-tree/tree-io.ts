@@ -1,9 +1,9 @@
-import fs from "fs"
-import events from "events"
-import readline from "readline"
+import fs from 'fs'
+import events from 'events'
+import readline from 'readline'
 
-import { AvlTree } from "./types"
-import { Node } from "./node"
+import { AvlTree } from './types'
+import { Node } from './node'
 
 /**
  * @public
@@ -15,17 +15,17 @@ export async function loadTree<K, V>(
 ): Promise<void> {
   const rl = readline
     .createInterface({
-      input: fs.createReadStream(file),
+      input: fs.createReadStream(file)
     })
-    .on("line", (line: string) => {
+    .on('line', (line: string) => {
       if (line.trim().length > 0) {
-        const row = line.trim().split(",")
+        const row = line.trim().split(',')
         const { key, value } = converter(row)
         tree.insert(key, value)
       }
     })
 
-  await events.once(rl, "close")
+  await events.once(rl, 'close')
 }
 
 /**
@@ -39,7 +39,7 @@ export async function saveTree<K, V>(
   if (!tree.root()) return
 
   const writeStream = fs.createWriteStream(file, {
-    autoClose: true,
+    autoClose: true
   })
 
   const queue: Node<K, V>[] = []
@@ -51,9 +51,9 @@ export async function saveTree<K, V>(
     const row = [converter(current.key, current.value)]
 
     // write to file (and flush if buffer full)
-    const highWaterMark = writeStream.write(row.join(",") + "\n")
+    const highWaterMark = writeStream.write(row.join(',') + '\n')
     if (!highWaterMark) {
-      await new Promise((resolve) => writeStream.once("drain", resolve))
+      await new Promise((resolve) => writeStream.once('drain', resolve))
     }
 
     if (current.left) queue.push(current.left)
@@ -61,5 +61,5 @@ export async function saveTree<K, V>(
   }
 
   writeStream.end()
-  await events.once(writeStream, "close")
+  await events.once(writeStream, 'close')
 }

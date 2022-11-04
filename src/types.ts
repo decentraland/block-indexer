@@ -1,6 +1,11 @@
 /**
  * @public
  */
+import { AvlTree } from './avl-tree/types'
+
+/**
+ * @public
+ */
 export type BlockInfo = {
   block: number
   timestamp: number
@@ -10,6 +15,7 @@ export type BlockInfo = {
  * @public
  */
 export type BlockSearch = {
+  tree: AvlTree<number, BlockInfo>
   findBlockForTimestamp(ts: number): Promise<BlockInfo | undefined>
 }
 
