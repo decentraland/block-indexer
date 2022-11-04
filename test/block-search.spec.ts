@@ -1,7 +1,7 @@
 import { BlockSearch, createAvlBlockSearch } from "../src"
 import { createMockBlockRepository } from "./helpers/mocks"
 import { range } from "./utils"
-import { realBlocks, testingBlocks } from "./fixtures"
+import { realBlocks, testingBlocks } from "./fixtures/blocks"
 
 describe("block-indexer", () => {
   let blockSearch: BlockSearch
