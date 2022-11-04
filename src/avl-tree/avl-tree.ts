@@ -340,20 +340,6 @@ export const createAvlTree = <K, V>(
     }
     return current
   }
-
-  /**
-   * Gets the maximum value node, rooted in a particular node.
-   * @param root The node to search.
-   * @return The node with the maximum key in the tree.
-   */
-  function _maxValueNode(root: Node<K, V>): Node<K, V> {
-    let current = root
-    while (current.right) {
-      current = current.right
-    }
-    return current
-  }
-
   /**
    * Gets the balance state of a node, indicating whether the left or right
    * subtrees are unbalanced.
