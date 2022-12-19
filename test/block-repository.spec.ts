@@ -1,5 +1,8 @@
-import { createBlockRepository } from "../src"
+import { createBlockRepository, metricsDefinitions } from "../src"
 import { EthereumProvider } from "../src"
+import { createTestMetricsComponent } from "@well-known-components/metrics"
+import { createLogComponent } from "@well-known-components/logger"
+import { ILoggerComponent, IMetricsComponent } from "@well-known-components/interfaces"
 
 const createEthereumMock = (currentBlock: number): EthereumProvider => ({
   getBlock(block: number): Promise<{ timestamp: string | number }> {
@@ -11,9 +14,20 @@ const createEthereumMock = (currentBlock: number): EthereumProvider => ({
 })
 
 describe("block-repository", () => {
+  let logs: ILoggerComponent
+  let metrics: IMetricsComponent<keyof typeof metricsDefinitions>
+
+  beforeEach(async () => {
+    logs = await createLogComponent({})
+    metrics = createTestMetricsComponent(metricsDefinitions)
+  })
+
   it("currentBlock", async () => {
-    const eth = createEthereumMock(1000)
-    const blockRepository = createBlockRepository(eth)
+    const blockRepository = createBlockRepository({
+      logs,
+      metrics,
+      ethereumProvider: createEthereumMock(1000),
+    })
 
     const currentBlock = await blockRepository.currentBlock()
 
@@ -22,8 +36,11 @@ describe("block-repository", () => {
   })
 
   it("currentBlock 2", async () => {
-    const eth = createEthereumMock(13268200)
-    const blockRepository = createBlockRepository(eth)
+    const blockRepository = createBlockRepository({
+      logs,
+      metrics,
+      ethereumProvider: createEthereumMock(13268200),
+    })
 
     const foundBlock = await blockRepository.findBlock(13268153)
 

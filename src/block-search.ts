@@ -1,17 +1,18 @@
-import { BlockInfo, BlockRepository, BlockSearch } from './types'
+import { BlockInfo, BlockSearch, BlockSearchComponents } from './types'
 import { createAvlTree } from './avl-tree/avl-tree'
 
 /**
  * @public
  */
-export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSearch => {
+export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSearchComponents): BlockSearch => {
+  const logger = logs.getLogger('block-search')
   const tree = createAvlTree<number, BlockInfo>(
     (x, y) => x - y,
     // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
     (x, y) => x.block! - y.block!
   )
 
-  const retrieveBlockAndAddToTree = async (blockNumber: number) => {
+  async function retrieveBlockAndAddToTree(blockNumber: number) {
     // We first attempt to search in the tree
     const found = tree.findByValue({ block: blockNumber })
     if (found) {
@@ -26,33 +27,63 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
     return blockInfo
   }
 
-  const findBlockForTimestamp = async (ts: number): Promise<BlockInfo | undefined> => {
+  async function findBlockForTimestamp(ts: number): Promise<BlockInfo | undefined> {
     const tsStart = new Date().getTime()
+
+    const range = tree.findEnclosingRange(ts)
+
+    function getStartRange(): number {
+      let start = 1
+      if (range.min !== undefined) {
+        const entry = tree.get(range.min)
+        if (entry) {
+          start = entry.block
+        }
+      }
+      return start
+    }
+
+    async function getEndRange(): Promise<number> {
+      let end: number | undefined
+      if (range.max !== undefined) {
+        const entry = tree.get(range.max)
+        if (entry) {
+          end = entry.block
+        }
+      }
+
+      if (end === undefined) {
+        end = (await blockRepository.currentBlock()).block
+      }
+
+      return end
+    }
+
     try {
-      const range = tree.findEnclosingRange(ts)
-      const start = range.min ? tree.get(range.min)?.block! : 1
-      const end = range.max ? tree.get(range.max)?.block! : (await blockRepository.currentBlock()).block
-      console.log(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in block range ${start}-${end}`)
+      const start = getStartRange()
+      const end = await getEndRange()
+      logger.debug(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in block range ${start}-${end}`)
       return await findBlockForTimestampInRange(ts, start, end)
-    } catch (e) {
-      console.log(e)
+    } catch (e: any) {
+      logger.error(e)
       throw e
     } finally {
       const tsEnd = new Date().getTime()
-      console.log(`BLOCK_SEARCH: findBlockForTimestamp(${ts}) took ${tsEnd - tsStart} ms.`)
+      logger.debug(`BLOCK_SEARCH: findBlockForTimestamp(${ts}) took ${tsEnd - tsStart} ms.`)
     }
   }
 
-  const findBlockForTimestampInRange = async (
+  async function findBlockForTimestampInRange(
     ts: number,
     startBlock: number,
     endBlock: number
-  ): Promise<BlockInfo | undefined> => {
+  ): Promise<BlockInfo | undefined> {
     while (startBlock <= endBlock) {
       const middle = Math.floor((startBlock + endBlock) / 2)
       const blockInMiddle = await retrieveBlockAndAddToTree(middle)
 
       if (blockInMiddle.timestamp === ts) {
+        metrics.increment('block_indexer_hits')
         return blockInMiddle
       } else if (blockInMiddle.timestamp < ts) {
         startBlock = middle + 1
@@ -60,6 +91,8 @@ export const createAvlBlockSearch = (blockRepository: BlockRepository): BlockSea
         endBlock = middle - 1
       }
     }
+
+    metrics.increment('block_indexer_misses')
     const [blockAtStart, blockAtEnd] = await Promise.all([
       retrieveBlockAndAddToTree(startBlock),
       retrieveBlockAndAddToTree(endBlock)

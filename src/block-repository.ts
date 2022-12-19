@@ -1,44 +1,52 @@
-import { BlockInfo, BlockRepository, EthereumProvider } from './types'
+import { BlockInfo, BlockRepository, BlockRepositoryComponents } from './types'
 
 /**
  * @public
  */
-export const createBlockRepository = (eth: EthereumProvider): BlockRepository => {
-  const currentBlock = async (): Promise<BlockInfo> => {
+export const createBlockRepository = ({
+  ethereumProvider,
+  logs,
+  metrics
+}: BlockRepositoryComponents): BlockRepository => {
+  const logger = logs.getLogger('block-repository')
+  async function currentBlock(): Promise<BlockInfo> {
     const tsStart = new Date().getTime()
     try {
-      const block = await eth.getBlockNumber()
+      const block = await ethereumProvider.getBlockNumber()
+      metrics.increment('block_indexer_rpc_requests')
       const found = await findBlock(block)
       if (!found) {
         throw Error(`Current block (${block}) could not be retrieved.`)
       }
 
       return found
-    } catch (e) {
-      console.log(e)
+    } catch (e: any) {
+      logger.error(e)
       throw e
     } finally {
       const tsEnd = new Date().getTime()
-      console.log(`BLOCK_SEARCH: currentBlock() took ${tsEnd - tsStart} ms.`)
+      logger.debug(`BLOCK_SEARCH: currentBlock() took ${tsEnd - tsStart} ms.`)
     }
   }
 
-  const findBlock = async (block: number): Promise<BlockInfo> => {
+  async function findBlock(block: number): Promise<BlockInfo> {
     const tsStart = new Date().getTime()
     try {
-      const { timestamp } = await eth.getBlock(block)
+      const { timestamp } = await ethereumProvider.getBlock(block)
+      metrics.increment('block_indexer_rpc_requests')
+
       if (timestamp) {
         return {
           block: block,
           timestamp: Number(timestamp)
         }
       }
-    } catch (e) {
-      console.log(e)
+    } catch (e: any) {
+      logger.error(e)
       throw e
     } finally {
       const tsEnd = new Date().getTime()
-      console.log(`BLOCK_SEARCH: findBlock(${block}) took ${tsEnd - tsStart} ms.`)
+      logger.debug(`BLOCK_SEARCH: findBlock(${block}) took ${tsEnd - tsStart} ms.`)
     }
 
     throw Error(`Block ${block} could not be retrieved.`)

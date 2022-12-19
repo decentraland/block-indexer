@@ -4,6 +4,9 @@
 
 ```ts
 
+import { ILoggerComponent } from '@well-known-components/interfaces';
+import { IMetricsComponent } from '@well-known-components/interfaces';
+
 // @public
 export type AvlTree<K, V> = {
     root(): Node_2<K, V> | null;
@@ -30,19 +33,33 @@ export type BlockRepository = {
 };
 
 // @public (undocumented)
+export type BlockRepositoryComponents = {
+    metrics: IMetricsComponent<keyof typeof metricsDefinitions>;
+    logs: ILoggerComponent;
+    ethereumProvider: EthereumProvider;
+};
+
+// @public (undocumented)
 export type BlockSearch = {
     tree: AvlTree<number, BlockInfo>;
     findBlockForTimestamp(ts: number): Promise<BlockInfo | undefined>;
 };
 
 // @public (undocumented)
+export type BlockSearchComponents = {
+    metrics: IMetricsComponent<keyof typeof metricsDefinitions>;
+    logs: ILoggerComponent;
+    blockRepository: BlockRepository;
+};
+
+// @public (undocumented)
 export type CompareFunction<K> = (a: K, b: K) => number;
 
 // @public (undocumented)
-export const createAvlBlockSearch: (blockRepository: BlockRepository) => BlockSearch;
+export const createAvlBlockSearch: ({ metrics, logs, blockRepository }: BlockSearchComponents) => BlockSearch;
 
 // @public (undocumented)
-export const createBlockRepository: (eth: EthereumProvider) => BlockRepository;
+export const createBlockRepository: ({ ethereumProvider, logs, metrics, }: BlockRepositoryComponents) => BlockRepository;
 
 // @public (undocumented)
 export const createCachingEthereumProvider: (eth: EthereumProvider) => EthereumProvider;
@@ -60,6 +77,22 @@ export function loadTree<K, V>(tree: AvlTree<K, V>, file: string, converter: (ro
     key: K;
     value: V;
 }): Promise<void>;
+
+// @public (undocumented)
+export const metricsDefinitions: {
+    block_indexer_misses: {
+        help: string;
+        type: "counter";
+    };
+    block_indexer_hits: {
+        help: string;
+        type: "counter";
+    };
+    block_indexer_rpc_requests: {
+        help: string;
+        type: "counter";
+    };
+};
 
 // @public (undocumented)
 export type PartialCompareFunction<V> = (a: Partial<V>, b: Partial<V>) => number;

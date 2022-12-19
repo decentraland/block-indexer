@@ -1,7 +1,6 @@
-/**
- * @public
- */
 import { AvlTree } from './avl-tree/types'
+import { ILoggerComponent, IMetricsComponent } from '@well-known-components/interfaces'
+import { metricsDefinitions } from './metrics'
 
 /**
  * @public
@@ -33,4 +32,22 @@ export type BlockRepository = {
 export type EthereumProvider = {
   getBlockNumber(): Promise<number>
   getBlock(block: number): Promise<{ timestamp: string | number }>
+}
+
+/**
+ * @public
+ */
+export type BlockSearchComponents = {
+  metrics: IMetricsComponent<keyof typeof metricsDefinitions>
+  logs: ILoggerComponent
+  blockRepository: BlockRepository
+}
+
+/**
+ * @public
+ */
+export type BlockRepositoryComponents = {
+  metrics: IMetricsComponent<keyof typeof metricsDefinitions>
+  logs: ILoggerComponent
+  ethereumProvider: EthereumProvider
 }
