@@ -39,7 +39,7 @@
     "@dcl/eslint-config": "^1.0.6",
     "@microsoft/api-extractor": "^7.33.4",
     "@types/jest": "^29.0.3",
-    "@types/node": "^16.18.3",
+    "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "@well-known-components/http-server": "^1.1.6",
