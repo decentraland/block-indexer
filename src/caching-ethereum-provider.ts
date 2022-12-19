@@ -17,11 +17,11 @@ export const createCachingEthereumProvider = (eth: EthereumProvider): EthereumPr
     }
   })
 
-  const getBlockNumber = async (): Promise<number> => {
-    return await eth.getBlockNumber()
+  function getBlockNumber(): Promise<number> {
+    return eth.getBlockNumber()
   }
 
-  const getBlock = async (block: number): Promise<{ timestamp: string | number }> => {
+  async function getBlock(block: number): Promise<{ timestamp: string | number }> {
     const found = await cache.fetch(block)
     if (found) {
       return {

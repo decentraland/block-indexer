@@ -1,13 +1,24 @@
-import { BlockSearch, createAvlBlockSearch } from "../src"
+import { BlockSearch, createAvlBlockSearch, metricsDefinitions } from "../src"
 import { createMockBlockRepository } from "./helpers/mocks"
 import { range } from "./utils"
 import { realBlocks, testingBlocks } from "./fixtures/blocks"
+import { createTestMetricsComponent } from "@well-known-components/metrics"
+import { createLogComponent } from "@well-known-components/logger"
+import { ILoggerComponent, IMetricsComponent } from "@well-known-components/interfaces"
 
 describe("block-indexer", () => {
   let blockSearch: BlockSearch
+  let logs: ILoggerComponent
+  let metrics: IMetricsComponent<keyof typeof metricsDefinitions>
 
-  beforeEach(() => {
-    blockSearch = createAvlBlockSearch(createMockBlockRepository(10, testingBlocks))
+  beforeEach(async () => {
+    logs = await createLogComponent({})
+    metrics = createTestMetricsComponent(metricsDefinitions)
+    blockSearch = createAvlBlockSearch({
+      logs,
+      metrics,
+      blockRepository: createMockBlockRepository(10, testingBlocks),
+    })
   })
 
   it.each(range(0, 9))("works for timestamps before start %p", async (ts) => {
@@ -49,7 +60,11 @@ describe("block-indexer", () => {
     [1623204021, 12597528, 1623204005],
     [1623204030, 12597529, 1623204022],
   ])("find block for timestamp %p", async (entityTs: number, block: number, blockTs: number) => {
-    const realBlockSearch: BlockSearch = createAvlBlockSearch(createMockBlockRepository(15597127, realBlocks))
+    const realBlockSearch: BlockSearch = createAvlBlockSearch({
+      logs,
+      metrics,
+      blockRepository: createMockBlockRepository(15597127, realBlocks),
+    })
 
     const currentBlock = await realBlockSearch.findBlockForTimestamp(entityTs)
     expect(currentBlock.block).toBe(block)

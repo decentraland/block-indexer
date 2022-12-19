@@ -23,6 +23,8 @@ jobs:
         run:  make build
       - name: test
         run:  make test
+      - name: lint
+        run: npm run lint:check
       - name: Publish
         uses: menduz/oddish-action@master
         with:
