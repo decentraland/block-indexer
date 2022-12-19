@@ -59,7 +59,7 @@ export type CompareFunction<K> = (a: K, b: K) => number;
 export const createAvlBlockSearch: ({ metrics, logs, blockRepository }: BlockSearchComponents) => BlockSearch;
 
 // @public (undocumented)
-export const createBlockRepository: ({ ethereumProvider, logs, metrics, }: BlockRepositoryComponents) => BlockRepository;
+export const createBlockRepository: ({ ethereumProvider, logs, metrics }: BlockRepositoryComponents) => BlockRepository;
 
 // @public (undocumented)
 export const createCachingEthereumProvider: (eth: EthereumProvider) => EthereumProvider;
