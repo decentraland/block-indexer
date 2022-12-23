@@ -86,6 +86,9 @@ export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSe
         metrics.increment('block_indexer_hits')
         return blockInMiddle
       } else if (blockInMiddle.timestamp < ts) {
+        if (middle + 1 > endBlock) {
+          break
+        }
         startBlock = middle + 1
       } else {
         endBlock = middle - 1
