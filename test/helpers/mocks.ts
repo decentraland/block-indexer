@@ -9,6 +9,10 @@ export const createMockBlockRepository = (currentBlock: number, blocks: Record<n
       })
     },
     findBlock(block: number): Promise<BlockInfo | undefined> {
+      if (block > currentBlock) {
+        return Promise.reject(new Error("Block after current block"))
+      }
+
       if (block in blocks) {
         return Promise.resolve({
           block,
