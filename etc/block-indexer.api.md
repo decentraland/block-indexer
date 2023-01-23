@@ -92,6 +92,10 @@ export const metricsDefinitions: {
         help: string;
         type: "counter";
     };
+    block_indexer_search_duration_ms: {
+        type: "histogram";
+        help: string;
+    };
 };
 
 // @public (undocumented)
