@@ -62,7 +62,6 @@ export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSe
     try {
       const start = getStartRange()
       const end = await getEndRange()
-      logger.debug(`BLOCK_SEARCH: findBlockForTimestamp: ${ts} in block range ${start}-${end}`)
       return await findBlockForTimestampInRange(ts, start, end)
     } catch (e: any) {
       logger.error(e)
