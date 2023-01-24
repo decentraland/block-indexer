@@ -96,6 +96,10 @@ export const metricsDefinitions: {
         type: "histogram";
         help: string;
     };
+    block_indexer_find_block_duration_ms: {
+        type: "histogram";
+        help: string;
+    };
 };
 
 // @public (undocumented)

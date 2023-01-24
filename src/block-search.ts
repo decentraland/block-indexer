@@ -1,11 +1,11 @@
-import { BlockInfo, BlockSearch, BlockSearchComponents } from "./types"
-import { createAvlTree } from "./avl-tree/avl-tree"
+import { BlockInfo, BlockSearch, BlockSearchComponents } from './types'
+import { createAvlTree } from './avl-tree/avl-tree'
 
 /**
  * @public
  */
 export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSearchComponents): BlockSearch => {
-  const logger = logs.getLogger("block-search")
+  const logger = logs.getLogger('block-search')
   const tree = createAvlTree<number, BlockInfo>(
     (x, y) => x - y,
     // TODO Need to check if it is possible for 2 blocks to have the same timestamp (unlikely)
@@ -68,7 +68,7 @@ export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSe
       throw e
     } finally {
       const tsEnd = Date.now()
-      metrics.observe("block_indexer_search_duration_ms", {}, tsEnd - tsStart)
+      metrics.observe('block_indexer_search_duration_ms', {}, tsEnd - tsStart)
     }
   }
 
@@ -82,7 +82,7 @@ export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSe
       const blockInMiddle = await retrieveBlockAndAddToTree(middle)
 
       if (blockInMiddle.timestamp === ts) {
-        metrics.increment("block_indexer_hits")
+        metrics.increment('block_indexer_hits')
         return blockInMiddle
       } else if (blockInMiddle.timestamp < ts) {
         if (middle + 1 > endBlock) {
@@ -94,10 +94,10 @@ export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSe
       }
     }
 
-    metrics.increment("block_indexer_misses")
+    metrics.increment('block_indexer_misses')
     const [blockAtStart, blockAtEnd] = await Promise.all([
       retrieveBlockAndAddToTree(startBlock),
-      retrieveBlockAndAddToTree(endBlock),
+      retrieveBlockAndAddToTree(endBlock)
     ])
 
     if (blockAtStart && blockAtStart.timestamp <= ts) {
@@ -111,6 +111,6 @@ export const createAvlBlockSearch = ({ metrics, logs, blockRepository }: BlockSe
 
   return {
     tree,
-    findBlockForTimestamp,
+    findBlockForTimestamp
   }
 }
