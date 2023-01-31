@@ -21,6 +21,8 @@ jobs:
         run: yarn build
       - name: test
         run: yarn test
+      - name: validate
+        run: yarn lint:check
       - name: publish packages
         uses: menduz/oddish-action@master
         id: publish_dcl_block_indexer
