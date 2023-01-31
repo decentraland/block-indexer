@@ -79,6 +79,6 @@ jobs:
             # Test this pull request
             - The `@dcl/block-indexer` package can be tested in scenes by running
                ```bash
-               npm install "${{ steps.url-generator.outputs.body }}"
+               yarn upgrade "${{ steps.url-generator.outputs.body }}"
                ```
           edit-mode: replace
