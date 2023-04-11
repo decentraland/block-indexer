@@ -998,8 +998,8 @@
     path-to-regexp "^6.2.1"
 
 "@well-known-components/interfaces@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.npmjs.org/@well-known-components/interfaces/-/interfaces-1.1.3.tgz"
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@well-known-components/interfaces/-/interfaces-1.3.0.tgz#e1ff8feceb22f0af29e100f7f24ad2e5331810bb"
   dependencies:
     "@types/node" "^16.11.19"
     "@types/node-fetch" "^2.5.12"
