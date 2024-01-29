@@ -36,7 +36,7 @@
     "lru-cache": "^7.14.0"
   },
   "devDependencies": {
-    "@dcl/eslint-config": "^1.1.6",
+    "@dcl/eslint-config": "^2.0.0",
     "@types/node": "^18.11.18",
     "@well-known-components/http-server": "^2.0.0",
     "@well-known-components/test-helpers": "^1.5.2",
