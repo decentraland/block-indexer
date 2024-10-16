@@ -2,6 +2,10 @@
 
 A component to find the block in the blockchain that was the tip of the blockchain at a given timestamp.
 
+## Installation 
+
+`npm i @dcl/block-indexer`
+
 ## Usage
 
 ```ts
