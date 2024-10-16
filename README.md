@@ -1,5 +1,7 @@
 # Block Indexer
 
+[![Coverage Status](https://coveralls.io/repos/github/decentraland/block-indexer/badge.svg?branch=main)](https://coveralls.io/github/decentraland/block-indexer?branch=main)
+
 A component to find the block in the blockchain that was the tip of the blockchain at a given timestamp.
 
 ## Installation 
