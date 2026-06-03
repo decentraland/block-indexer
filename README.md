@@ -1,10 +1,14 @@
 # Block Indexer
 
-[![Coverage Status](https://coveralls.io/repos/github/decentraland/block-indexer/badge.svg?branch=main)](https://coveralls.io/github/decentraland/block-indexer?branch=main)
+> **⚠️ Deprecated — this repository has moved.**
+>
+> `@dcl/block-indexer` is now developed and published from the [`decentraland/core-components`](https://github.com/decentraland/core-components) monorepo, under [`components/block-indexer`](https://github.com/decentraland/core-components/tree/main/components/block-indexer).
+>
+> This repository is archived and will no longer receive updates. The npm package name (`@dcl/block-indexer`) is unchanged — no action is required for existing consumers, but please open new issues and pull requests against `decentraland/core-components`.
 
 A component to find the block in the blockchain that was the tip of the blockchain at a given timestamp.
 
-## Installation 
+## Installation
 
 `npm i @dcl/block-indexer`
 
